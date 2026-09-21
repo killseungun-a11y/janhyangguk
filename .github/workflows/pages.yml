@@ -32,6 +32,83 @@ jobs:
           test -s cut02_master.png
           test -s cutscene_03_first_echo.png
 
+      - name: Apply dialogue motion and speaker polish
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          text = re.sub(r"const V='[^']+';", "const V='20260921-dialogue-motion1';", text, count=1)
+
+          marker = '/* dialogue-motion-v1 */'
+          if marker not in text:
+              css = r'''
+          /* dialogue-motion-v1 */
+          .caption.hajin-turn{align-items:flex-start}
+          .caption.player-turn{align-items:flex-end;background:linear-gradient(90deg,rgba(0,0,0,.54),rgba(5,14,21,.82) 48%,rgba(4,13,20,.96))}
+          .caption.hajin-turn .speaker{color:#e4e6e8;font-weight:650;letter-spacing:.08em}
+          .caption.player-turn .speaker{color:#9fb8cc;font-size:11px;font-weight:700;letter-spacing:.15em;text-align:right}
+          .caption.hajin-turn .line{width:94%;max-width:94%;padding:8px 0 8px 12px;border-left:2px solid rgba(232,235,238,.42);text-align:left;color:#f4f4f3}
+          .caption.player-turn .line{width:88%;max-width:88%;min-height:54px;padding:8px 12px 8px 0;border-right:2px solid rgba(143,180,207,.72);text-align:right;color:#dceaf4;font-size:18px}
+          .caption.hajin-turn .hint{align-self:flex-start}
+          .caption.player-turn .hint{align-self:flex-end;text-align:right;color:#758b9c}
+          .choices{align-items:stretch}
+          .choices::before{content:'관리관 · 당신';display:block;margin:0 4px 2px;color:#9fb8cc;font-size:10px;font-weight:700;letter-spacing:.15em;text-align:right}
+          .choice{border-left-color:rgba(255,255,255,.12);border-right:2px solid rgba(143,180,207,.68);background:linear-gradient(90deg,rgba(7,9,11,.86),rgba(10,22,30,.92));text-align:right;color:#e2edf5}
+
+          .cut02-shot.beat-a .motion-head{animation:cut02BeatHeadA .72s cubic-bezier(.2,.7,.25,1) both}
+          .cut02-shot.beat-a .motion-shoulder{animation:cut02BeatShoulderA .72s cubic-bezier(.2,.7,.25,1) both}
+          .cut02-shot.beat-a .motion-coat{animation:cut02BeatBodyA .72s cubic-bezier(.2,.7,.25,1) both}
+          .cut02-shot.beat-a .motion-folder{animation:cut02BeatFolderA .72s cubic-bezier(.2,.7,.25,1) both}
+
+          .cut02-shot.beat-b .motion-head{animation:cut02BeatHeadB .9s cubic-bezier(.2,.65,.25,1) both}
+          .cut02-shot.beat-b .motion-shoulder{animation:cut02BeatShoulderB .9s cubic-bezier(.2,.65,.25,1) both}
+          .cut02-shot.beat-b .motion-coat{animation:cut02BeatBodyB .9s cubic-bezier(.2,.65,.25,1) both}
+          .cut02-shot.beat-b .motion-right-arm{animation:cut02BeatArmB .9s cubic-bezier(.2,.65,.25,1) both}
+
+          .cut02-shot.beat-c .motion-head{animation:cut02BeatHeadC .8s cubic-bezier(.25,.65,.2,1) both}
+          .cut02-shot.beat-c .motion-shoulder{animation:cut02BeatShoulderC .8s cubic-bezier(.25,.65,.2,1) both}
+          .cut02-shot.beat-c .motion-coat{animation:cut02BeatBodyC .8s cubic-bezier(.25,.65,.2,1) both}
+          .cut02-shot.beat-c .motion-folder{animation:cut02BeatFolderC .8s cubic-bezier(.25,.65,.2,1) both}
+
+          .cut02-shot.listening .motion-head,.cut02-shot.listening .motion-shoulder,.cut02-shot.listening .motion-coat,.cut02-shot.listening .motion-right-arm,.cut02-shot.listening .motion-folder,.cut02-shot.listening .motion-lower{animation:none!important}
+          .cut02-shot.listening .motion-head{transform:translate3d(.15px,.45px,0) rotate(.025deg)}
+          .cut02-shot.listening .motion-shoulder{transform:translate3d(0,.35px,0)}
+
+          @keyframes cut02BeatHeadA{0%,100%{transform:translate3d(0,0,0) rotate(0)}42%{transform:translate3d(-.25px,-1.45px,0) rotate(-.085deg)}}
+          @keyframes cut02BeatShoulderA{0%,100%{transform:translate3d(0,0,0) rotate(0)}42%{transform:translate3d(.35px,-2px,0) rotate(.08deg)}}
+          @keyframes cut02BeatBodyA{0%,100%{transform:translate3d(0,0,0)}42%{transform:translate3d(.3px,-1.65px,0)}}
+          @keyframes cut02BeatFolderA{0%,100%{transform:translate3d(0,0,0) rotate(0)}46%{transform:translate3d(.65px,-1.1px,0) rotate(-.1deg)}}
+
+          @keyframes cut02BeatHeadB{0%,100%{transform:translate3d(0,0,0) rotate(0)}48%{transform:translate3d(.5px,-.8px,0) rotate(.075deg)}}
+          @keyframes cut02BeatShoulderB{0%,100%{transform:translate3d(0,0,0)}48%{transform:translate3d(1px,-1.5px,0)}}
+          @keyframes cut02BeatBodyB{0%,100%{transform:translate3d(0,0,0) scaleY(1)}48%{transform:translate3d(.8px,-2.2px,0) scaleY(1.0025)}}
+          @keyframes cut02BeatArmB{0%,100%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(1.5px,-1.1px,0) rotate(-.16deg)}}
+
+          @keyframes cut02BeatHeadC{0%,100%{transform:translate3d(0,0,0) rotate(0)}38%{transform:translate3d(-.15px,.85px,0) rotate(-.055deg)}62%{transform:translate3d(.1px,-.35px,0) rotate(.02deg)}}
+          @keyframes cut02BeatShoulderC{0%,100%{transform:translate3d(0,0,0)}45%{transform:translate3d(-.45px,.8px,0)}}
+          @keyframes cut02BeatBodyC{0%,100%{transform:translate3d(0,0,0)}45%{transform:translate3d(-.35px,.65px,0)}}
+          @keyframes cut02BeatFolderC{0%,100%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(-.8px,.65px,0) rotate(.1deg)}}
+          '''
+              text = text.replace('</style>', css + '\n</style>')
+
+          old_state = "let si=0,queue=[],waitingChoice=false,locked=false,finished=false;"
+          new_state = "let si=0,queue=[],waitingChoice=false,locked=false,finished=false,hajinBeat=0;"
+          text = text.replace(old_state, new_state)
+
+          old_dialogue = "function setDialogue(item){caption.classList.remove('show');setTimeout(()=>{if(!document.body.contains(caption))return;speaker.textContent=item.speaker;speaker.classList.toggle('player',item.speaker==='관리관');line.textContent=item.text;hint.textContent='화면을 터치하여 진행';caption.classList.add('show')},80)}"
+          new_dialogue = "function setDialogue(item){const isPlayer=item.speaker==='관리관';caption.classList.remove('show','player-turn','hajin-turn');const cut02=document.querySelector('[data-scene=\\\"CUT02\\\"]');if(cut02&&cut02.classList.contains('active')){cut02.classList.remove('beat-a','beat-b','beat-c','listening');void cut02.offsetWidth;if(item.speaker==='윤하진'){const beats=['beat-a','beat-b','beat-c'];cut02.classList.add(beats[hajinBeat++%beats.length])}else if(isPlayer){cut02.classList.add('listening')}}setTimeout(()=>{if(!document.body.contains(caption))return;speaker.textContent=isPlayer?'관리관 · 당신':item.speaker;speaker.classList.toggle('player',isPlayer);caption.classList.toggle('player-turn',isPlayer);caption.classList.toggle('hajin-turn',item.speaker==='윤하진');line.textContent=item.text;hint.textContent='화면을 터치하여 진행';caption.classList.add('show')},80)}"
+          if old_dialogue not in text:
+              raise SystemExit('setDialogue source did not match expected briefing build')
+          text = text.replace(old_dialogue, new_dialogue)
+
+          text = text.replace("interactiveBriefing:true,badgeSeparateLayer:false", "interactiveBriefing:true,dialogueMotion:true,speakerContrast:true,badgeSeparateLayer:false")
+          path.write_text(text, encoding='utf-8')
+          PY
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
