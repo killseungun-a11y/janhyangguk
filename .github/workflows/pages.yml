@@ -23,14 +23,40 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Prepare canonical cutscene assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p resources /tmp/janhyangguk-assets
+          curl --fail --location --retry 4 --retry-delay 2 \
+            'https://app-dgayh3.v2.appdeploy.ai/resources/cutscene_01_arrival.png' \
+            --output /tmp/janhyangguk-assets/cutscene_01_arrival.png
+          curl --fail --location --retry 4 --retry-delay 2 \
+            'https://app-dgayh3.v2.appdeploy.ai/resources/cutscene_02_hajin.png' \
+            --output /tmp/janhyangguk-assets/cutscene_02_hajin.png
+          curl --fail --location --retry 4 --retry-delay 2 \
+            'https://app-dgayh3.v2.appdeploy.ai/resources/cutscene_03_first_echo.png' \
+            --output /tmp/janhyangguk-assets/cutscene_03_first_echo.png
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq webp
+          cwebp -quiet -lossless -z 9 /tmp/janhyangguk-assets/cutscene_01_arrival.png -o resources/cutscene_01_arrival.webp
+          cwebp -quiet -lossless -z 9 /tmp/janhyangguk-assets/cutscene_02_hajin.png -o resources/cutscene_02_hajin.webp
+          cwebp -quiet -lossless -z 9 /tmp/janhyangguk-assets/cutscene_03_first_echo.png -o resources/cutscene_03_first_echo.webp
+          test -s resources/cutscene_01_arrival.webp
+          test -s resources/cutscene_02_hajin.webp
+          test -s resources/cutscene_03_first_echo.webp
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
