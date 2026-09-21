@@ -24,13 +24,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify opening assets
+      - name: Verify game and branding assets
         shell: bash
         run: |
           set -euo pipefail
           test -s resources/cutscene_01_arrival.png
           test -s cut02_master.png
           test -s cutscene_03_first_echo.png
+          test -s branding/index.html
+          grep -q '<title>' branding/index.html
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
