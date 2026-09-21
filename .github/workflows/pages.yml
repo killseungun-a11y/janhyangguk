@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -47,10 +47,26 @@ jobs:
           test -s resources/cutscene_02_hajin.webp
           test -s resources/cutscene_03_first_echo.webp
 
+      - name: Normalize animation CSS for mobile browsers
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          replacements = {
+              'calc(var(--look-x) * -.35 - .8px)': 'calc(var(--look-x) - .8px)',
+              'calc(var(--look-x) * -.35)': 'var(--look-x)',
+              'calc(var(--look-x) * .24 + .8px)': 'calc(var(--look-x) + .8px)',
+              'calc(var(--look-x) * .24)': 'var(--look-x)',
+          }
+          for old, new in replacements.items():
+              text = text.replace(old, new)
+          path.write_text(text, encoding='utf-8')
+          PY
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
