@@ -17,9 +17,9 @@
 (() => {
   const MANAGEMENT_URL='https://nocturne-protocol-mobile.quiet-earth-0178.chatgpt.site/';
   const scenes=[
-    {id:'CUT01',src:'./resources/cutscene_01_arrival.webp',top:'동부 제6관리소',speaker:'안내',dialogues:['동부 제6관리소.'],env:'rain',layered:false,alt:'비가 내리는 동부 제6관리소 출입구'},
-    {id:'CUT02',src:'./resources/cutscene_02_hajin.webp',top:'관리구역 · 내부',speaker:'윤하진',dialogues:['관리관님?','맞으시죠.','하진입니다.','지금 현장에 남아 있는 사람은 저 하나예요.'],env:'monitor',layered:true,alt:'관리구역 내부에서 윤하진을 처음 만나는 장면'},
-    {id:'CUT03',src:'./resources/cutscene_03_first_echo.webp',top:'관리실 · 격실 01',speaker:'윤하진',dialogues:['저게 첫 번째예요.'],env:'cctv',layered:false,alt:'관리실 CCTV로 첫 잔향 한 획을 확인하는 장면'}
+    {id:'CUT01',src:'./resources/cutscene_01_arrival.png',top:'동부 제6관리소',speaker:'안내',dialogues:['동부 제6관리소.'],env:'rain',layered:false,alt:'비가 내리는 동부 제6관리소 출입구'},
+    {id:'CUT02',src:'./resources/cutscene_02_hajin.png',top:'관리구역 · 내부',speaker:'윤하진',dialogues:['관리관님?','맞으시죠.','하진입니다.','지금 현장에 남아 있는 사람은 저 하나예요.'],env:'monitor',layered:true,alt:'관리구역 내부에서 윤하진을 처음 만나는 장면'},
+    {id:'CUT03',src:'./resources/cutscene_03_first_echo.png',top:'관리실 · 격실 01',speaker:'윤하진',dialogues:['저게 첫 번째예요.'],env:'cctv',layered:false,alt:'관리실 CCTV로 첫 잔향 한 획을 확인하는 장면'}
   ];
   const app=document.querySelector('#app');
   window.__CUTSCENE_QA__={assets:[],activeScene:'PRELOAD',cut03Rendered:false,livePortraitActive:false,liveLayerCount:0,faceDeformation:false};
