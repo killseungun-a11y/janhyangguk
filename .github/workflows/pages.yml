@@ -30,14 +30,8 @@ jobs:
           set -euo pipefail
           test -s resources/cutscene_01_arrival.png
           test -s cut02_master.png
+          test -s cutscene_03_first_echo.png
           echo 'dadb75fadbf8949c17e045aeb27b84c07eb89c3685e1e2dd3c6e9bb904107fb3  resources/cutscene_01_arrival.png' | sha256sum -c -
-
-      - name: Rebuild approved CUT03 artwork
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat .cut03_asset/part00.b64 .cut03_asset/part01.b64 .cut03_asset/part02.b64 .cut03_asset/part03.b64 .cut03_asset/part04.b64 .cut03_asset/part05.b64 | tr -d '\n\r' | base64 --decode > cutscene_03_first_echo_backview.webp
-          echo '4278c21d22bd4e837c8d5a96a43a28ff02e675d107317d249f2948d435b05a53  cutscene_03_first_echo_backview.webp' | sha256sum -c -
 
       - name: Apply opening direction patch
         shell: bash
@@ -47,8 +41,7 @@ jobs:
           import re
           path = Path('index.html')
           text = path.read_text(encoding='utf-8')
-          text = re.sub(r"const V='[^']+';", "const V='20260921-cut03-backview';", text, count=1)
-          text = text.replace("src:'./cutscene_03_first_echo.png?v='+V", "src:'./cutscene_03_first_echo_backview.webp?v='+V")
+          text = re.sub(r"const V='[^']+';", "const V='20260921-cut03-approved-v2';", text, count=1)
           text = text.replace("dialogues:['저게 첫 번째예요.']", "dialogues:['첫 번째입니다.','한 획.']")
           old_render = "if(scene.id!=='CUT02')return `<div class=\"shot image-shot\" data-scene=\"${scene.id}\">${img(scene.src,'scene-img',scene.alt)}</div>`;"
           new_render = "if(scene.id==='CUT03')return `<div class=\"shot image-shot cut03-shot\" data-scene=\"${scene.id}\">${img(scene.src,'scene-img cut03-img',scene.alt)}</div>`;if(scene.id!=='CUT02')return `<div class=\"shot image-shot\" data-scene=\"${scene.id}\">${img(scene.src,'scene-img',scene.alt)}</div>`;"
