@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -24,11 +24,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare canonical cutscene assets
+      - name: Prepare cutscene assets
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p resources /tmp/janhyangguk-assets
+          mkdir -p resources
+
+          if [ -s resources/cutscene_01_arrival.webp ] && [ -s resources/cutscene_02_hajin.webp ] && [ -s resources/cutscene_03_first_echo.webp ]; then
+            echo 'Using vendored repository assets.'
+            exit 0
+          fi
+
+          mkdir -p /tmp/janhyangguk-assets
           curl --fail --location --retry 4 --retry-delay 2 \
             'https://app-dgayh3.v2.appdeploy.ai/resources/cutscene_01_arrival.png' \
             --output /tmp/janhyangguk-assets/cutscene_01_arrival.png
@@ -38,14 +45,30 @@ jobs:
           curl --fail --location --retry 4 --retry-delay 2 \
             'https://app-dgayh3.v2.appdeploy.ai/resources/cutscene_03_first_echo.png' \
             --output /tmp/janhyangguk-assets/cutscene_03_first_echo.png
+
           sudo apt-get update -qq
           sudo apt-get install -y -qq webp
           cwebp -quiet -lossless -z 9 /tmp/janhyangguk-assets/cutscene_01_arrival.png -o resources/cutscene_01_arrival.webp
           cwebp -quiet -lossless -z 9 /tmp/janhyangguk-assets/cutscene_02_hajin.png -o resources/cutscene_02_hajin.webp
           cwebp -quiet -lossless -z 9 /tmp/janhyangguk-assets/cutscene_03_first_echo.png -o resources/cutscene_03_first_echo.webp
+
           test -s resources/cutscene_01_arrival.webp
           test -s resources/cutscene_02_hajin.webp
           test -s resources/cutscene_03_first_echo.webp
+
+      - name: Persist cutscene assets in repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git status --porcelain resources | grep -q .; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add resources
+            git commit -m 'chore: vendor cutscene assets'
+            git push
+          else
+            echo 'Assets already vendored.'
+          fi
 
       - name: Normalize animation CSS for mobile browsers
         shell: bash
