@@ -30,13 +30,17 @@ jobs:
           set -euo pipefail
           mkdir -p resources
 
-          if [ ! -s resources/cutscene_01_arrival.png ] || [ ! -s resources/cutscene_02_hajin.png ] || [ ! -s resources/cutscene_03_first_echo.png ]; then
+          if [ ! -s resources/cutscene_01_arrival.png ]; then
             curl --fail --location --retry 4 --retry-delay 2 \
               'https://app-dgayh3.v2.appdeploy.ai/resources/cutscene_01_arrival.png' \
               --output resources/cutscene_01_arrival.png
+          fi
+          if [ ! -s resources/cutscene_02_hajin.png ]; then
             curl --fail --location --retry 4 --retry-delay 2 \
               'https://app-dgayh3.v2.appdeploy.ai/resources/cutscene_02_hajin.png' \
               --output resources/cutscene_02_hajin.png
+          fi
+          if [ ! -s resources/cutscene_03_first_echo.png ]; then
             curl --fail --location --retry 4 --retry-delay 2 \
               'https://app-dgayh3.v2.appdeploy.ai/resources/cutscene_03_first_echo.png' \
               --output resources/cutscene_03_first_echo.png
@@ -45,8 +49,8 @@ jobs:
           cat <<'EOF' | sha256sum -c -
           dadb75fadbf8949c17e045aeb27b84c07eb89c3685e1e2dd3c6e9bb904107fb3  resources/cutscene_01_arrival.png
           ec829e4d0c945a6f5dc2051249b325c018a4ecd4ee2d68f706f5a6bf17f6000a  resources/cutscene_02_hajin.png
-          9f567b107b35094c1a8b4fc30f1dff76357c9955159f4d4f70fc185a6578ed93  resources/cutscene_03_first_echo.png
           EOF
+          test -s resources/cutscene_03_first_echo.png
 
       - name: Switch runtime to PNG originals
         shell: bash
@@ -90,6 +94,53 @@ jobs:
           }
           for old, new in replacements.items():
               text = text.replace(old, new)
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Apply opening direction patch
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          text = text.replace("const V='20260921-motion2';", "const V='20260921-natural-cut03-focus';")
+          text = text.replace("dialogues:['저게 첫 번째예요.']", "dialogues:['첫 번째입니다.','한 획.']")
+
+          old_render = "if(scene.id!=='CUT02')return `<div class=\"shot image-shot\" data-scene=\"${scene.id}\">${img(scene.src,'scene-img',scene.alt)}</div>`;"
+          new_render = "if(scene.id==='CUT03')return `<div class=\"shot image-shot cut03-shot\" data-scene=\"${scene.id}\">${img(scene.src,'scene-img cut03-img',scene.alt)}</div>`;if(scene.id!=='CUT02')return `<div class=\"shot image-shot\" data-scene=\"${scene.id}\">${img(scene.src,'scene-img',scene.alt)}</div>`;"
+          text = text.replace(old_render, new_render)
+
+          old_head = "${img(s,'cut02-img cut02-base',scene.alt)}${img(s,'cut02-img cut02-motion motion-shoulder','')}"
+          new_head = "${img(s,'cut02-img cut02-base',scene.alt)}${img(s,'cut02-img cut02-motion motion-head','')}${img(s,'cut02-img cut02-motion motion-shoulder','')}"
+          text = text.replace(old_head, new_head)
+
+          override = r'''
+/* vNext natural character motion + CUT03 anomaly focus */
+.cut02-motion{opacity:.56;filter:brightness(1.006) contrast(1.003)}
+.cut02-shot.active .cut02-frame{animation:cut02Camera 9s cubic-bezier(.2,.6,.2,1) both}
+.motion-head{clip-path:ellipse(29% 29% at 48% 27%);transform-origin:48% 31%;animation:headMove 6s ease-in-out infinite;z-index:4}
+.motion-shoulder{animation:shoulderMove 6s ease-in-out infinite}
+.motion-coat{animation:coatMove 6s ease-in-out infinite}
+.motion-right-arm{animation:rightArmMove 6.15s ease-in-out infinite}
+.motion-folder{animation:folderMove 6.25s ease-in-out infinite}
+.motion-lower{animation:lowerMove 6.4s ease-in-out infinite}
+@keyframes cut02Camera{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.012) translate3d(-1px,-2px,0)}}
+@keyframes headMove{0%,100%{transform:translate3d(0,0,0) rotate(0)}42%{transform:translate3d(.12px,-.34px,0) rotate(-.04deg)}58%{transform:translate3d(.18px,-.46px,0) rotate(-.055deg)}}
+@keyframes shoulderMove{0%,100%{transform:translate3d(0,0,0) rotate(0)}42%{transform:translate3d(.35px,-.9px,0) rotate(.05deg)}58%{transform:translate3d(.5px,-1.25px,0) rotate(.07deg)}}
+@keyframes coatMove{0%,100%{transform:translate3d(0,0,0) scaleY(1)}42%{transform:translate3d(.35px,-1.15px,0) scaleY(1.0013)}58%{transform:translate3d(.55px,-1.65px,0) scaleY(1.002)}}
+@keyframes rightArmMove{0%,100%{transform:translate3d(0,0,0) rotate(0)}45%{transform:translate3d(.5px,-.55px,0) rotate(-.07deg)}60%{transform:translate3d(.8px,-.85px,0) rotate(-.11deg)}}
+@keyframes folderMove{0%,100%{transform:translate3d(0,0,0) rotate(0)}47%{transform:translate3d(.45px,-.65px,0) rotate(-.09deg)}62%{transform:translate3d(.7px,-1px,0) rotate(-.14deg)}}
+@keyframes lowerMove{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(-.35px,-.8px,0)}}
+.cut03-shot.active{animation:none}
+.cut03-img{object-position:68% 47%;transform:scale(1.08);transform-origin:68% 46%;will-change:transform}
+.cut03-shot.active .cut03-img{animation:cut03Focus 8s cubic-bezier(.2,.6,.2,1) both}
+@keyframes cut03Focus{0%{transform:scale(1.08) translate3d(0,0,0)}100%{transform:scale(1.145) translate3d(-1.8%,-.4%,0)}}
+.stage[data-env=cctv] .noise{opacity:.38}
+.stage[data-env=cctv] .scanline{opacity:.34}
+'''
+          text = text.replace('</style>', override + '\n</style>')
           path.write_text(text, encoding='utf-8')
           PY
 
