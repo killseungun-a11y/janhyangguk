@@ -7,8 +7,8 @@
 <title>잔향국 · 에셋 업로더</title>
 <style>
 :root{color-scheme:dark;--bg:#090a0d;--panel:#111318;--line:#30343b;--ink:#eee8de;--muted:#8f949a;--accent:#9a805d;--ok:#6e9b7d;--bad:#b55d63}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}body{padding:18px}.wrap{max-width:760px;margin:auto}.title{font-family:Georgia,"Batang",serif;font-size:26px;letter-spacing:.08em;margin:8px 0}.sub{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:18px}.card{border:1px solid var(--line);background:linear-gradient(180deg,#12151a,#0d0f13);border-radius:14px;padding:14px;margin-bottom:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:11px;color:#b8b2a8}input,select,button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:#0b0d10;color:var(--ink);padding:10px 12px;font:inherit}input:focus,select:focus{outline:1px solid var(--accent)}button{cursor:pointer}button.primary{background:linear-gradient(#201a14,#15120f);border-color:#7f694e;font-weight:700}button.secondary{background:#101319}button:disabled{opacity:.45;cursor:not-allowed}.tokenrow{display:grid;grid-template-columns:1fr auto;gap:8px}.drop{border:1px dashed #5a6068;border-radius:14px;padding:24px 14px;text-align:center;color:#a7abb0;transition:.15s;background:#0b0d10}.drop.drag{border-color:#b09a77;background:#14110e;color:#e7dbc8}.drop input{display:none}.drop strong{display:block;color:#ded7cc;margin-bottom:5px}.files{display:grid;gap:7px;margin-top:10px}.file{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid #252a31;background:#0b0d10;border-radius:9px;padding:8px 10px}.file small{color:#7f858c}.progress{height:7px;background:#07080a;border:1px solid #2b3037;border-radius:999px;overflow:hidden;margin-top:8px}.progress>div{height:100%;width:0;background:#867255;transition:width .15s}.status{font-size:12px;line-height:1.6;color:#aaa}.status.ok{color:#8db99a}.status.bad{color:#d48389}.log{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;max-height:210px;overflow:auto;background:#07080a;border:1px solid #22262c;border-radius:9px;padding:10px;color:#a9adb2}.notice{font-size:11px;color:#8b9096;line-height:1.55}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1;min-width:150px}
-@media(max-width:640px){body{padding:12px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.title{font-size:22px}.tokenrow{grid-template-columns:1fr}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}body{padding:18px}.wrap{max-width:760px;margin:auto}.title{font-family:Georgia,"Batang",serif;font-size:26px;letter-spacing:.08em;margin:8px 0}.sub{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:18px}.card{border:1px solid var(--line);background:linear-gradient(180deg,#12151a,#0d0f13);border-radius:14px;padding:14px;margin-bottom:12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:11px;color:#b8b2a8}input,select,button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:#0b0d10;color:var(--ink);padding:10px 12px;font:inherit}input:focus,select:focus{outline:1px solid var(--accent)}button{cursor:pointer}button.primary{background:linear-gradient(#201a14,#15120f);border-color:#7f694e;font-weight:700}button.secondary{background:#101319}button.danger{border-color:#674248;color:#d9a4a7;background:#161012}button:disabled{opacity:.45;cursor:not-allowed}.tokenrow{display:grid;grid-template-columns:1fr auto auto;gap:8px}.remember{display:flex;align-items:center;gap:8px;min-height:32px;color:#aaa;font-size:12px}.remember input{min-height:auto;width:16px;height:16px;margin:0}.drop{border:1px dashed #5a6068;border-radius:14px;padding:24px 14px;text-align:center;color:#a7abb0;transition:.15s;background:#0b0d10}.drop.drag{border-color:#b09a77;background:#14110e;color:#e7dbc8}.drop input{display:none}.drop strong{display:block;color:#ded7cc;margin-bottom:5px}.files{display:grid;gap:7px;margin-top:10px}.file{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid #252a31;background:#0b0d10;border-radius:9px;padding:8px 10px}.file small{color:#7f858c}.progress{height:7px;background:#07080a;border:1px solid #2b3037;border-radius:999px;overflow:hidden;margin-top:8px}.progress>div{height:100%;width:0;background:#867255;transition:width .15s}.status{font-size:12px;line-height:1.6;color:#aaa}.status.ok{color:#8db99a}.status.bad{color:#d48389}.log{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-wrap;max-height:210px;overflow:auto;background:#07080a;border:1px solid #22262c;border-radius:9px;padding:10px;color:#a9adb2}.notice{font-size:11px;color:#8b9096;line-height:1.55}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1;min-width:150px}
+@media(max-width:640px){body{padding:12px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.title{font-size:22px}.tokenrow{grid-template-columns:1fr 1fr}.tokenrow input{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -19,15 +19,16 @@
   <section class="card">
     <div class="grid">
       <div class="field full">
-        <label>GitHub Fine-grained PAT · 저장하지 않음</label>
-        <div class="tokenrow"><input id="token" type="password" autocomplete="off" placeholder="github_pat_..."><button id="check" class="secondary">연결 확인</button></div>
+        <label>GitHub Fine-grained PAT</label>
+        <div class="tokenrow"><input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..."><button id="check" class="secondary">연결 확인</button><button id="disconnect" class="danger">연결 해제</button></div>
+        <label class="remember"><input id="remember" type="checkbox" checked> 이 기기에서 연결 유지</label>
       </div>
       <div class="field"><label>저장소</label><input id="repo" value="killseungun-a11y/janhyangguk"></div>
       <div class="field"><label>브랜치</label><input id="branch" value="main"></div>
       <div class="field full"><label>대상 폴더</label><input id="folder" value="resources/uploads" placeholder="resources/characters"></div>
       <div class="field full"><label>커밋 메시지</label><input id="message" value="assets: upload game assets"></div>
     </div>
-    <p class="notice">토큰 권한은 이 저장소의 <b>Contents: Read and write</b>만 있으면 됩니다. 토큰 값은 localStorage/sessionStorage/cookie에 저장하지 않습니다.</p>
+    <p class="notice">연결 유지를 켜면 PAT·저장소·브랜치를 <b>현재 브라우저의 localStorage에만 저장</b>합니다. 같은 기기/브라우저에서는 다시 입력할 필요가 없습니다. 공용 기기에서는 연결 유지를 끄거나 작업 후 연결 해제를 눌러주세요. 토큰 권한은 이 저장소의 <b>Contents: Read and write</b>만 권장합니다.</p>
   </section>
 
   <section class="card">
@@ -45,9 +46,10 @@
 <script>
 (() => {
   const $ = (s) => document.querySelector(s);
+  const STORE='janhyangguk.assetUploader.connection.v1';
   const token = $('#token'), repo = $('#repo'), branch = $('#branch'), folder = $('#folder'), message = $('#message');
   const picker = $('#picker'), drop = $('#drop'), filesEl = $('#files'), uploadBtn = $('#upload'), clearBtn = $('#clear');
-  const statusEl = $('#status'), logEl = $('#log'), bar = $('#bar'), checkBtn = $('#check');
+  const statusEl = $('#status'), logEl = $('#log'), bar = $('#bar'), checkBtn = $('#check'), disconnectBtn=$('#disconnect'), remember=$('#remember');
   let selected = [];
 
   const log = (m) => { logEl.textContent += '\n' + m; logEl.scrollTop = logEl.scrollHeight; };
@@ -55,6 +57,25 @@
   const safeFolder = (v) => v.trim().replace(/^\/+|\/+$/g,'').replace(/\\/g,'/');
   const safeName = (v) => v.replace(/[\\/:*?"<>|]/g,'_');
   const pretty = (n) => n < 1024*1024 ? (n/1024).toFixed(1)+' KB' : (n/1024/1024).toFixed(1)+' MB';
+
+  function saveConnection(){
+    if(!remember.checked){localStorage.removeItem(STORE);return;}
+    const data={token:token.value.trim(),repo:repo.value.trim(),branch:branch.value.trim(),folder:folder.value.trim()};
+    if(data.token)localStorage.setItem(STORE,JSON.stringify(data));
+  }
+  function restoreConnection(){
+    try{
+      const raw=localStorage.getItem(STORE); if(!raw)return false;
+      const data=JSON.parse(raw);
+      if(!data||!data.token)return false;
+      token.value=data.token; if(data.repo)repo.value=data.repo; if(data.branch)branch.value=data.branch; if(data.folder)folder.value=data.folder;
+      remember.checked=true; setStatus('저장된 GitHub 연결을 불러왔습니다.','ok'); log('saved connection loaded'); return true;
+    }catch{localStorage.removeItem(STORE);return false;}
+  }
+  function disconnect(){
+    localStorage.removeItem(STORE); token.value=''; remember.checked=false;
+    setStatus('연결 정보를 이 기기에서 삭제했습니다.'); log('saved connection removed');
+  }
 
   function renderFiles(){
     filesEl.innerHTML='';
@@ -71,6 +92,8 @@
   ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag');}));
   drop.addEventListener('drop',e=>addFiles(e.dataTransfer.files));
   clearBtn.onclick=()=>{selected=[];renderFiles();bar.style.width='0%';setStatus('대기 중');logEl.textContent='ready';};
+  disconnectBtn.onclick=disconnect;
+  remember.onchange=()=>{if(!remember.checked)localStorage.removeItem(STORE);};
 
   async function gh(path, opts={}){
     const t=token.value.trim(); if(!t) throw new Error('토큰을 입력하세요.');
@@ -80,12 +103,17 @@
     return data;
   }
 
-  checkBtn.onclick=async()=>{
-    checkBtn.disabled=true; setStatus('연결 확인 중...');
-    try{const [owner,name]=repo.value.trim().split('/'); if(!owner||!name) throw new Error('저장소 형식은 owner/repo 입니다.');
-      await gh(`/repos/${owner}/${name}/git/ref/heads/${encodeURIComponent(branch.value.trim())}`); setStatus('GitHub 연결 정상','ok'); log('connection ok');
-    }catch(e){setStatus(e.message,'bad');log('ERROR '+e.message)}finally{checkBtn.disabled=false;}
-  };
+  async function checkConnection(auto=false){
+    checkBtn.disabled=true; setStatus(auto?'저장된 연결 확인 중...':'연결 확인 중...');
+    try{
+      const [owner,name]=repo.value.trim().split('/'); if(!owner||!name) throw new Error('저장소 형식은 owner/repo 입니다.');
+      await gh(`/repos/${owner}/${name}/git/ref/heads/${encodeURIComponent(branch.value.trim())}`);
+      saveConnection(); setStatus(remember.checked?'GitHub 연결 정상 · 이 기기에 저장됨':'GitHub 연결 정상','ok'); log('connection ok');
+      return true;
+    }catch(e){setStatus(e.message,'bad');log('ERROR '+e.message);return false;}
+    finally{checkBtn.disabled=false;}
+  }
+  checkBtn.onclick=()=>checkConnection(false);
 
   function fileToBase64(file){
     return new Promise((resolve,reject)=>{
@@ -107,13 +135,13 @@
   uploadBtn.onclick=async()=>{
     if(!selected.length){setStatus('파일을 먼저 선택하세요.','bad');return;}
     const [owner,name]=repo.value.trim().split('/'); if(!owner||!name){setStatus('저장소 형식을 확인하세요.','bad');return;}
-    uploadBtn.disabled=clearBtn.disabled=checkBtn.disabled=true; bar.style.width='3%'; logEl.textContent='upload start';
+    uploadBtn.disabled=clearBtn.disabled=checkBtn.disabled=disconnectBtn.disabled=true; bar.style.width='3%'; logEl.textContent='upload start';
     try{
+      saveConnection();
       const br=branch.value.trim();
       const ref=await gh(`/repos/${owner}/${name}/git/ref/heads/${encodeURIComponent(br)}`); const head=ref.object.sha;
       const commit=await gh(`/repos/${owner}/${name}/git/commits/${head}`); const baseTree=commit.tree.sha;
       log(`base ${head.slice(0,8)}`); bar.style.width='8%';
-
       const entries=[];
       for(let i=0;i<selected.length;i++){
         entries.push(await uploadBlob(owner,name,selected[i],i,selected.length));
@@ -126,8 +154,10 @@
       await gh(`/repos/${owner}/${name}/git/refs/heads/${encodeURIComponent(br)}`,{method:'PATCH',body:JSON.stringify({sha:newCommit.sha,force:false})});
       bar.style.width='100%'; setStatus(`완료 · ${selected.length}개 파일 · ${newCommit.sha.slice(0,8)}`,'ok'); log('done');
     }catch(e){setStatus(e.message,'bad');log('ERROR '+e.message);bar.style.width='0%';}
-    finally{uploadBtn.disabled=clearBtn.disabled=checkBtn.disabled=false;}
+    finally{uploadBtn.disabled=clearBtn.disabled=checkBtn.disabled=disconnectBtn.disabled=false;}
   };
+
+  if(restoreConnection()) checkConnection(true);
 })();
 </script>
 </body>
