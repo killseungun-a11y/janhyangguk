@@ -28,9 +28,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -s resources/cutscene_01_arrival.png
-          test -s cut02_master.png
-          test -s cutscene_03_first_echo.png
+          test -s assets/cutscenes/cutscene_01_arrival.png
+          test -s assets/cutscenes/cut02_master.png
+          test -s assets/cutscenes/cutscene_03_first_echo.png
           test -s branding/index.html
           grep -q '<title>' branding/index.html
 
