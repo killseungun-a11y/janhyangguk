@@ -101,8 +101,8 @@ const SPRITE_STATES=['neutral','talk1','sad','surprise','determined'];
 const SPRITE_FILE='talk1.b64';
 
 const scenes=[
-{id:'CUT01',src:'./resources/cutscene_01_arrival.png?v='+V,top:'동부 제6관리소',env:'rain',alt:'비가 내리는 동부 제6관리소 출입구',script:[L('안내','동부 제6관리소.')]},
-{id:'CUT02',src:'./cut02_master.png?v='+V,top:'관리구역 · 내부',env:'monitor',alt:'관리구역 내부에서 윤하진을 처음 만나는 장면',script:[
+{id:'CUT01',src:'./assets/cutscenes/cutscene_01_arrival.png?v='+V,top:'동부 제6관리소',env:'rain',alt:'비가 내리는 동부 제6관리소 출입구',script:[L('안내','동부 제6관리소.')]},
+{id:'CUT02',src:'./assets/cutscenes/cut02_master.png?v='+V,top:'관리구역 · 내부',env:'monitor',alt:'관리구역 내부에서 윤하진을 처음 만나는 장면',script:[
 L('윤하진','……관리관님?'),
 L('윤하진','맞으시죠. 윤하진입니다.'),
 L('윤하진','오셔서 다행이에요. 일단 안으로 들어오세요.'),
@@ -128,7 +128,7 @@ L('윤하진','그럼 하나 보여드릴게요.'),
 L('윤하진','저거부터 보죠.')
 ]}
 ]},
-{id:'CUT03',src:'./cutscene_03_first_echo.png?v='+V,top:'관리실 · 격실 01',env:'cctv',alt:'윤하진이 격실 01의 첫 잔향 한 획을 바라보는 장면',script:[
+{id:'CUT03',src:'./assets/cutscenes/cutscene_03_first_echo.png?v='+V,top:'관리실 · 격실 01',env:'cctv',alt:'윤하진이 격실 01의 첫 잔향 한 획을 바라보는 장면',script:[
 L('윤하진','격실 01.'),
 L('윤하진','식별명은 ‘한 획’.'),
 L('윤하진','기록은 몇 건 남아 있지만, 그대로 믿진 마세요.'),
@@ -152,7 +152,7 @@ function renderScene(scene){
 
 function loadImage(src){return new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=reject;i.src=src})}
 async function buildExpressionFrames(){
-  const b64=await fetch('./resources/cut02_expr/'+SPRITE_FILE+'?v='+V).then(r=>{if(!r.ok)throw new Error('CUT02 표정 스프라이트 로드 실패');return r.text()});
+  const b64=await fetch('./assets/cutscenes/cut02_expr/'+SPRITE_FILE+'?v='+V).then(r=>{if(!r.ok)throw new Error('CUT02 표정 스프라이트 로드 실패');return r.text()});
   const sprite=await loadImage('data:image/webp;base64,'+b64.trim());
   const frameW=1024,frameH=1536;
   for(let i=0;i<SPRITE_STATES.length;i++){
