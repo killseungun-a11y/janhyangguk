@@ -1,0 +1,99 @@
+name: Reorganize assets once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/reorganize-assets-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reorganize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Consolidate asset folders and references
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p assets/cutscenes/cut02_expr assets/anomalies/third-bell assets/employees
+
+          # Keep one canonical copy of opening/cutscene assets.
+          [ -f resources/cutscene_01_arrival.png ] && cp -f resources/cutscene_01_arrival.png assets/cutscenes/cutscene_01_arrival.png || true
+          [ -f cut02_master.png ] && cp -f cut02_master.png assets/cutscenes/cut02_master.png || true
+          [ -f cutscene_03_first_echo.png ] && cp -f cutscene_03_first_echo.png assets/cutscenes/cutscene_03_first_echo.png || true
+          [ -d resources/cut02_expr ] && cp -a resources/cut02_expr/. assets/cutscenes/cut02_expr/ || true
+
+          # Merge anomaly docs into the canonical assets tree. Tiny placeholder webp files are intentionally discarded.
+          [ -f resources/abnormalities/third-bell/README.md ] && cp -f resources/abnormalities/third-bell/README.md assets/anomalies/third-bell/README.md || true
+          [ -f resources/abnormalities/third-bell/asset-manifest.json ] && cp -f resources/abnormalities/third-bell/asset-manifest.json assets/anomalies/third-bell/asset-manifest.json || true
+
+          # If Astra build assets exist, promote employee SD assets into the canonical source tree.
+          if [ -d dist/assets/employees ]; then
+            cp -a dist/assets/employees/. assets/employees/
+            rm -rf dist/assets/employees
+          fi
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = {
+              './resources/cutscene_01_arrival.png': './assets/cutscenes/cutscene_01_arrival.png',
+              './cut02_master.png': './assets/cutscenes/cut02_master.png',
+              './cutscene_03_first_echo.png': './assets/cutscenes/cutscene_03_first_echo.png',
+              "./resources/cut02_expr/": "./assets/cutscenes/cut02_expr/",
+          }
+          for old, new in replacements.items():
+              s = s.replace(old, new)
+          p.write_text(s, encoding='utf-8')
+
+          p = Path('.github/workflows/pages.yml')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('test -s resources/cutscene_01_arrival.png', 'test -s assets/cutscenes/cutscene_01_arrival.png')
+          s = s.replace('test -s cut02_master.png', 'test -s assets/cutscenes/cut02_master.png')
+          s = s.replace('test -s cutscene_03_first_echo.png', 'test -s assets/cutscenes/cutscene_03_first_echo.png')
+          p.write_text(s, encoding='utf-8')
+          PY
+
+          cat > assets/README.md <<'EOF'
+          # Janhyangguk asset layout
+
+          Runtime/game assets use `assets/` as the single canonical root.
+
+          - `assets/cutscenes/` — opening and cutscene images / expression payloads
+          - `assets/employees/` — employee SD assets
+          - `assets/anomalies/` — anomaly assets and manifests
+
+          Do not add new runtime assets under root, `resources/`, or `dist/assets/`; merge them here instead.
+          EOF
+
+          # Remove duplicate/scattered legacy copies after references have been switched.
+          rm -f cut02_master.png cutscene_03_first_echo.png
+          rm -rf resources
+
+          # Remove empty Astra build asset containers only; preserve unrelated dist output.
+          if [ -d dist/assets ] && [ -z "$(find dist/assets -mindepth 1 -print -quit)" ]; then rmdir dist/assets; fi
+          if [ -d dist ] && [ -z "$(find dist -mindepth 1 -print -quit)" ]; then rmdir dist; fi
+
+      - name: Commit cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'janhyangguk-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'refactor: consolidate scattered assets into canonical tree'
+          git push origin HEAD:main
