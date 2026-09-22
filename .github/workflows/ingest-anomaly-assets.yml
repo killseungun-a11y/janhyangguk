@@ -1,0 +1,74 @@
+name: Ingest Anomaly Assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      anomaly_id:
+        description: "Anomaly ID (example: P027)"
+        required: true
+        type: string
+      slug:
+        description: "English asset slug (example: night_cleaner)"
+        required: true
+        type: string
+      source_url:
+        description: "HTTPS URL of a PNG/WebP/ZIP asset to ingest"
+        required: true
+        type: string
+      filename:
+        description: "Output filename including extension"
+        required: true
+        type: string
+      bucket:
+        description: "Destination bucket"
+        required: true
+        default: "source"
+        type: choice
+        options:
+          - source
+          - game
+          - archive
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "${{ inputs.anomaly_id }}" =~ ^P[0-9]{3}$ ]] || { echo "Invalid anomaly_id"; exit 1; }
+          [[ "${{ inputs.slug }}" =~ ^[a-z0-9_]+$ ]] || { echo "Invalid slug"; exit 1; }
+          [[ "${{ inputs.filename }}" =~ ^[A-Za-z0-9._-]+\.(png|webp|zip)$ ]] || { echo "Invalid filename"; exit 1; }
+          [[ "${{ inputs.source_url }}" =~ ^https:// ]] || { echo "Only HTTPS source URLs are allowed"; exit 1; }
+
+      - name: Download asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST="assets/anomalies/${{ inputs.anomaly_id }}_${{ inputs.slug }}/${{ inputs.bucket }}"
+          mkdir -p "$DEST"
+          curl --fail --location --proto '=https' --tlsv1.2 --max-time 120 \
+            "${{ inputs.source_url }}" \
+            -o "$DEST/${{ inputs.filename }}"
+          test -s "$DEST/${{ inputs.filename }}"
+
+      - name: Commit asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "janhyangguk-asset-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/anomalies/
+          if git diff --cached --quiet; then
+            echo "No asset changes."
+            exit 0
+          fi
+          git commit -m "assets: ingest ${{ inputs.anomaly_id }} ${{ inputs.filename }}"
+          git push
