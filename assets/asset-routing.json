@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "root": "assets",
+  "types": {
+    "employee": {
+      "label": "직원 SD",
+      "path": "employees/{subject}/{state}",
+      "subjects": [
+        {"label":"윤하진","slug":"hajin"},
+        {"label":"박도겸","slug":"dogyeom"},
+        {"label":"백서아","slug":"seoa"},
+        {"label":"최민호","slug":"minho"},
+        {"label":"한세린","slug":"serin"},
+        {"label":"정태린","slug":"taerin"},
+        {"label":"오지후","slug":"jihu"},
+        {"label":"노연우","slug":"yeonwoo"},
+        {"label":"강시온","slug":"sion"},
+        {"label":"백나윤","slug":"nayoon"}
+      ],
+      "states": [
+        {"label":"대기","slug":"idle"},
+        {"label":"걷기","slug":"walk"},
+        {"label":"작업","slug":"work"},
+        {"label":"표정","slug":"expression"},
+        {"label":"초상","slug":"portrait"},
+        {"label":"기타","slug":"misc"}
+      ]
+    },
+    "anomaly": {
+      "label": "환상체",
+      "path": "anomalies/{subject}/{state}",
+      "subjectMode": "text",
+      "subjectLabel": "환상체 ID / slug",
+      "subjectPlaceholder": "third-bell",
+      "states": [
+        {"label":"원화","slug":"art"},
+        {"label":"SD","slug":"sd"},
+        {"label":"분리 파츠","slug":"layers"},
+        {"label":"매니페스트","slug":"manifest"},
+        {"label":"기타","slug":"misc"}
+      ]
+    },
+    "cutscene": {
+      "label": "컷씬",
+      "path": "cutscenes/{subject}",
+      "subjects": [
+        {"label":"CUT01","slug":"cut01"},
+        {"label":"CUT02","slug":"cut02"},
+        {"label":"CUT03","slug":"cut03"},
+        {"label":"기타","slug":"misc"}
+      ]
+    },
+    "ui": {
+      "label": "UI",
+      "path": "ui/{subject}",
+      "subjects": [
+        {"label":"공통","slug":"common"},
+        {"label":"관리 화면","slug":"management"},
+        {"label":"오프닝","slug":"opening"},
+        {"label":"브랜딩","slug":"branding"}
+      ]
+    },
+    "inbox": {
+      "label": "임시 inbox",
+      "path": "inbox"
+    }
+  }
+}
