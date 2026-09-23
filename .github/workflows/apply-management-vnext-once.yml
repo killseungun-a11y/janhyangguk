@@ -1,0 +1,45 @@
+name: Apply management vNext once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/.tmp-management-vnext-*.b64'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct management vNext
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat tools/.tmp-management-vnext-*.b64 | tr -d '\n' | base64 -d | gzip -dc > management/index.html.new
+          test -s management/index.html.new
+          grep -q 'DAY 01 목표 달성' management/index.html.new
+          grep -q '관찰 유지' management/index.html.new
+          grep -q 'assets/anomalies/one-stroke/work/' management/index.html.new
+          mv management/index.html.new management/index.html
+
+      - name: Commit generated management page
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add management/index.html
+          if git diff --cached --quiet; then
+            echo 'No management changes to commit.'
+            exit 0
+          fi
+          git commit -m 'feat: deepen Day 1 management loop'
+          git push
